@@ -1,5 +1,5 @@
-Django Timesheet
-================
+Django Timecard
+===============
 
 Requirements
 ------------
@@ -9,5 +9,8 @@ Requirements
 
  * django.contrib.auth
 
+* DateUtil_
+
 .. _Python: http://python.org/
 .. _Django: http://djangoproject.com/
+.. _DateUtil: http://labix.org/python-dateutil

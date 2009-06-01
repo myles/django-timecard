@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.contenttypes import generic
 from django.contrib.comments.models import Comment
 
-from timesheet.models import Manager, Timesheet
+from timecard.models import Manager, Timecard
 
 class ManagerAdmin(admin.ModelAdmin):
 	list_display = ('__unicode__',)
@@ -19,10 +19,10 @@ class CommentInline(generic.GenericStackedInline):
 	extra = 1
 	form = CommentForm
 
-class TimesheetAdmin(admin.ModelAdmin):
+class TimecardAdmin(admin.ModelAdmin):
 	inlines = [
 		CommentInline,
 	]
 
 admin.site.register(Manager, ManagerAdmin)
-admin.site.register(Timesheet, TimesheetAdmin)
+admin.site.register(Timecard, TimecardAdmin)

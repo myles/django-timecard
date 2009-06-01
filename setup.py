@@ -6,11 +6,11 @@ def read(fname):
 	return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
-	name = 'django-timesheet',
+	name = 'django-timecard',
 	version = '0.1',
-	url = 'http://github.com/myles/django-timesheet',
+	url = 'http://github.com/myles/django-timecard',
 	license = 'BSD License',
-	description = 'A Django timesheet application.',
+	description = 'A Django timecard application.',
 	long_description = read('README'),
 	
 	author = 'Myles Braithwaite',

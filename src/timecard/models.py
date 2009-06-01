@@ -17,18 +17,18 @@ class Manager(models.Model):
 	class Meta:
 		verbose_name = _('manager')
 		verbose_name_plural = _('managers')
-		db_table = 'timesheet_managers'
+		db_table = 'timecard_managers'
 	
 	@permalink
 	def get_absolute_url(self):
-		return ('timesheet_manager_detail', None, {
+		return ('timecard_manager_detail', None, {
 			'username': self.manager.username,
 		})
 	
 	def __unicode__(self):
 		return u"%s %s" % (self.manager.first_name, self.manager.last_name)
 
-class Timesheet(models.Model):
+class Timecard(models.Model):
 	user = models.ForeignKey(User)
 	
 	date = models.DateField(_('date'))
@@ -43,9 +43,9 @@ class Timesheet(models.Model):
 	date_modified = models.DateTimeField(_('date modified'), auto_now=True)
 	
 	class Meta:
-		verbose_name = _('timesheet')
-		verbose_name_plural = _('timesheets')
-		db_table = 'timesheets'
+		verbose_name = _('timecard')
+		verbose_name_plural = _('timecards')
+		db_table = 'timecards'
 		ordering = ('-date', 'date_modified')
 		unique_together = (('user', 'date'))
 	
