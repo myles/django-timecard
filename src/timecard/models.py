@@ -1,6 +1,6 @@
-from datetime import datetime, timedelta, date
-from dateutil.relativedelta import *
-import time
+import datetime, time
+
+from dateutil.relativedelta import relativedelta
 
 from django.db import models
 from django.db.models import permalink
@@ -9,24 +9,30 @@ from django.contrib.comments.models import Comment
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.generic import GenericRelation
 
-class Manager(models.Model):
-	manager = models.ForeignKey(User, related_name='manager',
+class Employee(models.Model):
+	employee = models.ForeignKey(User, related_name='employee',
 		unique=True)
-	employee = models.ManyToManyField(User, related_name='employees')
+	manager = models.ManyToManyField(User, related_name='managers')
+	
+	avg_time_in = models.TimeField(_('average time in'))
+	avg_time_out = models.TimeField(_('average time out'))
+	
+	date_added = models.DateTimeField(_('date added'), auto_now_add=True)
+	date_modified = models.DateTimeField(_('date modified'), auto_now=True)
 	
 	class Meta:
-		verbose_name = _('manager')
-		verbose_name_plural = _('managers')
-		db_table = 'timecard_managers'
+		verbose_name = _('employee')
+		verbose_name_plural = _('employees')
+		db_table = 'timecard_employees'
 	
 	@permalink
 	def get_absolute_url(self):
-		return ('timecard_manager_detail', None, {
-			'username': self.manager.username,
+		return ('timecard_employee_detail', None, {
+			'username': self.employee.username,
 		})
 	
 	def __unicode__(self):
-		return u"%s %s" % (self.manager.first_name, self.manager.last_name)
+		return u"%s %s" % (self.employee.first_name, self.employee.last_name)
 
 class Timecard(models.Model):
 	user = models.ForeignKey(User)
@@ -56,15 +62,15 @@ class Timecard(models.Model):
 	def lunch(self):
 		if self.lunch_in and self.lunch_out:
 			lunch = relativedelta(
-				datetime.combine(self.date, self.lunch_in),
-				datetime.combine(self.date, self.lunch_out)
+				datetime.datetime.combine(self.date, self.lunch_in),
+				datetime.datetime.combine(self.date, self.lunch_out)
 			)
 			
 			return "%s.%s" % (lunch.hours, ((lunch.minutes * 100) / 60))
 		elif self.lunch_out:
 			lunch = relativedelta(
-				datetime.now(),
-				datetime.combine(self.date, self.lunch_out)
+				datetime.datetime.now(),
+				datetime.datetime.combine(self.date, self.lunch_out)
 			)
 			
 			return "%s.%s" % (lunch.hours, ((lunch.minutes * 100) / 60))
@@ -75,13 +81,13 @@ class Timecard(models.Model):
 	def full_hours(self):
 		if self.time_out:
 			full_time = relativedelta(
-				datetime.combine(self.date, self.time_out),
-				datetime.combine(self.date, self.time_in)
+				datetime.datetime.combine(self.date, self.time_out),
+				datetime.datetime.combine(self.date, self.time_in)
 			)
 		else:
 			full_time = relativedelta(
-				datetime.now(),
-				datetime.combine(self.date, self.time_in)
+				datetime.datetime.now(),
+				datetime.datetime.combine(self.date, self.time_in)
 			)
 		
 		return "%s.%s" % (full_time.hours, ((full_time.minutes * 100) / 60))

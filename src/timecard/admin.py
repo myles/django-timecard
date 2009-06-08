@@ -3,9 +3,9 @@ from django.contrib import admin
 from django.contrib.contenttypes import generic
 from django.contrib.comments.models import Comment
 
-from timecard.models import Manager, Timecard
+from timecard.models import Employee, Timecard
 
-class ManagerAdmin(admin.ModelAdmin):
+class EmployeeAdmin(admin.ModelAdmin):
 	list_display = ('__unicode__',)
 
 class CommentForm(forms.ModelForm):
@@ -20,9 +20,10 @@ class CommentInline(generic.GenericStackedInline):
 	form = CommentForm
 
 class TimecardAdmin(admin.ModelAdmin):
+	list_display = ('user', 'date')
 	inlines = [
 		CommentInline,
 	]
 
-admin.site.register(Manager, ManagerAdmin)
+admin.site.register(Employee, EmployeeAdmin)
 admin.site.register(Timecard, TimecardAdmin)
