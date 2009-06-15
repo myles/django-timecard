@@ -1,0 +1,28 @@
+{% extends "timecard/base_timecard.html" %}
+
+{% block title %}{{ block.super }}: for {{ date|date:"d F, Y" }}{% endblock %}
+
+{% block content_title %}
+	<h2>Timecard for {{ date|date:"d F, Y" }}
+{% endblock %}
+
+{% block content %}
+	{% if timesheet %}<p>See this weeks <a href="{{ timesheet.get_absolute_url }}">Timecard</a>.</p>{% endif %}
+	
+	{% if manager %}
+		<p>
+			You currently managing:
+			{% for sub in manager %}<a href="{{ sub.get_absolute_url }}">{{ sub }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+		</p>
+	{% endif %}
+	
+	{% if employee %}
+		<form action="." method="post" accept-charset="utf-8">
+			<fieldset id="timecard">
+				<legend>Timecard</legend>
+				{{ form.as_p }}
+			</fieldset>
+			<p><input type="submit" value="Punch"></p>
+		</form>
+	{% endif %}
+{% endblock %}
