@@ -58,6 +58,14 @@ class Timecard(models.Model):
 	def __unicode__(self):
 		return u"%s %s - %s" % (self.user.first_name, self.user.last_name, self.date)
 	
+	@permalink
+	def get_absolute_url(self):
+		return ('timecard_weekly', None, {
+			'username': user.username,
+			'year': date.year,
+			'week': date.strftime("%W"),
+		})
+	
 	@property
 	def lunch(self):
 		if self.lunch_in and self.lunch_out:
