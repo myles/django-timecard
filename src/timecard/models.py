@@ -10,9 +10,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.generic import GenericRelation
 
 class Employee(models.Model):
-	employee = models.ForeignKey(User, related_name='employee',
+	employee = models.ForeignKey(User, related_name='timecard_employee',
 		unique=True)
-	manager = models.ManyToManyField(User, related_name='managers')
+	manager = models.ManyToManyField(User, related_name='timecard_managers')
 	
 	avg_time_in = models.TimeField(_('average time in'))
 	avg_time_out = models.TimeField(_('average time out'))
@@ -35,7 +35,7 @@ class Employee(models.Model):
 		return u"%s %s" % (self.employee.first_name, self.employee.last_name)
 
 class Timecard(models.Model):
-	user = models.ForeignKey(User)
+	user = models.ForeignKey(User, related_name='timecards')
 	
 	date = models.DateField(_('date'))
 	time_in = models.TimeField(_('time in'))
