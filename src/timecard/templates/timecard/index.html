@@ -1,13 +1,14 @@
 {% extends "timecard/base_timecard.html" %}
+{% load comments %}
 
 {% block title %}{{ block.super }}: for {{ date|date:"d F, Y" }}{% endblock %}
 
 {% block content_title %}
-	<h2>Timecard for {{ date|date:"d F, Y" }}
+	<h2>Timecard for {{ date|date:"d F, Y" }}</h2>
 {% endblock %}
 
 {% block content %}
-	{% if timesheet %}<p>See this weeks <a href="{{ timesheet.get_absolute_url }}">Timecard</a>.</p>{% endif %}
+	{% if timecard %}<p>See this weeks <a href="{{ timecard.get_absolute_url }}">Timecard</a>.</p>{% endif %}
 	
 	{% if manager %}
 		<p>

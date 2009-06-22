@@ -43,7 +43,7 @@ class Timecard(models.Model):
 	lunch_in = models.TimeField(_('lunch in'), blank=True, null=True)
 	time_out = models.TimeField(_('time out'), blank=True, null=True)
 	
-	note = GenericRelation(Comment, object_id_field='object_pk')
+	notes = GenericRelation(Comment, object_id_field='object_pk')
 	
 	date_added = models.DateTimeField(_('date added'), auto_now_add=True)
 	date_modified = models.DateTimeField(_('date modified'), auto_now=True)
@@ -61,9 +61,9 @@ class Timecard(models.Model):
 	@permalink
 	def get_absolute_url(self):
 		return ('timecard_weekly', None, {
-			'username': user.username,
-			'year': date.year,
-			'week': date.strftime("%W"),
+			'username': self.user.username,
+			'year': self.date.year,
+			'week': self.date.strftime("%W"),
 		})
 	
 	@property

@@ -1,26 +1,33 @@
 {% extends "timecard/base_timecard.html" %}
 
-{% block title %}{{ block.super }}: for {{ date|date:"d F, Y" }}{% endblock %}
+{% block title %}{{ block.super }}: for {{ first_date|date:"d F" }} to {{ last_date|date:"d F" }}{% endblock %}
 
 {% block content_title %}
-	<h2>Timecard for {{ date|date:"d F, Y" }}
+	<h2>Timecard for {{ first_date|date:"d F" }} to {{ last_date|date:"d F" }}</h2>
 {% endblock %}
 
 {% block content %}
 	<table border="0">
-		<tr><th>Time in</th><th>Lunch out</th><th>Lunch in</th><th>Time out</th><th>Hours</th></tr>
+		<thead><tr><th>Day</th><th>Time in</th><th>Lunch out</th><th>Lunch in</th><th>Time out</th><th>Hours</th></tr></thead>
+		<tfoot>
+			<tr>
+				<th>Total Hours</th>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<th>{{ week_total_hours }}</th>
+			</tr>
+		</tfoot>
 		{% for timecard in timecards %}
 			<tr>
-				<th>{{ timecard.date|date:"d" }}</th>
-				<td>{{ timecard.time_in }}</td>
-				<td>{{ timecard.lunch_out }}</td>
-				<td>{{ timecard.lunch_in }}</td>
-				<td>{{ timecard.time_out }}</td>
+				<th>{{ timecard.date|date:"l" }}</th>
+				<td>{{ timecard.time_in|time:"g:i a" }}</td>
+				<td>{{ timecard.lunch_out|time:"g:i a" }}</td>
+				<td>{{ timecard.lunch_in|time:"g:i a" }}</td>
+				<td>{{ timecard.time_out|time:"g:i a" }}</td>
 				<th>{{ timecard.display_hours }}</th>
 			</tr>
 		{% endfor %}
-		<tr>
-			<th>{{ week_total_hours }}</th>
-		</tr>
 	</table>
 {% endblock %}
