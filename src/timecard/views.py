@@ -110,13 +110,52 @@ def weekly(request, username, year, week):
 	for timecard in queryset:
 		week_total_hours = week_total_hours + timecard.hours
 	
+	prev_week = (first_date - datetime.timedelta(days=6)).strftime('%W')
+	next_week = (last_date + datetime.timedelta(days=6)).strftime('%W')
+	
 	context = {
 		'employee': employee,
 		'manager': manager,
 		'timecards': queryset,
 		'first_date': first_date,
 		'last_date': last_date,
-		'week_total_hours': week_total_hours
+		'week_total_hours': week_total_hours,
+		'prev_week': prev_week,
+		'next_week': next_week,
 	}
 	
 	return render_to_response('timecard/weekly.html', context, context_instance=RequestContext(request))
+
+def yearly(request, username, year):
+	week = datetime.date.today().strftime('%W')
+	return weekly(request, username, year, week)
+
+def user(request, username):
+	user = request.user
+	
+	try:
+		employee = Employee.objects.get(employee__username=username)
+	except Employee.DoesNotExist:
+		raise Http404
+	
+	if not user.has_perm('add_timecard') or not user.has_perm('edit_timecard'):
+		return HttpResponseForbidden()
+	
+	try:
+		manager = Employee.objects.get(employee=employee.employee, manager__in=[request.user,])
+	except Employee.DoesNotExist:
+		manager = None
+		employee = Employee.objects.get(employee=user)
+		
+		if not user == employee.employee:
+			return HttpResponseForbidden()
+	
+	queryset = Timecard.objects.filter(user=employee.employee).order_by('date')
+	
+	context = {
+		'employee': employee,
+		'manager': manager,
+		'timecards': queryset,
+	}
+	
+	return render_to_response('timecard/user.html', context, context_instance=RequestContext(request))

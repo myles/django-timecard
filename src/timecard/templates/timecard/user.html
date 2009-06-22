@@ -1,0 +1,15 @@
+{% extends "timecard/base_timecard.html" %}
+
+{% block title %}{{ block.super }}: {{ employee.employee.get_full_name }}{% endblock %}
+
+{% block content_title %}
+	<h2>{{ employee.employee.get_full_name }}</h2>
+{% endblock %}
+
+{% block content %}
+	<ul class="link_list">
+		{% for timecard in timecards %}
+			<li><a href="{{ timecard.get_absolute_url }}">{{ timecard.date }}</a></li>
+		{% endfor %}
+	</ul>
+{% endblock %}

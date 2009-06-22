@@ -7,6 +7,8 @@
 {% endblock %}
 
 {% block content %}
+	<p><a href="{% url timecard_weekly employee.employee.username first_date|date:"Y" prev_week %}">{{ prev_week }}</a> - <a href="{% url timecard_weekly employee.employee.username last_date|date:"Y" next_week %}">{{ next_week }}</a></p>
+	
 	<table border="0">
 		<thead><tr><th>Day</th><th>Time in</th><th>Lunch out</th><th>Lunch in</th><th>Time out</th><th>Hours</th></tr></thead>
 		<tfoot>
