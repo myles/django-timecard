@@ -20,6 +20,10 @@ class Command(BaseCommand):
 			time_avg = Timecard.objects.filter(
 				user=employee.employee).aggregate(Avg('time_in'), Avg('time_out'))
 			
-			employee.avg_time_in = datetime.time(int(time_avg['time_in__avg']))
-			employee.avg_time_out = datetime.time(int(time_avg['time_out__avg']))
+			if time_avg['time_in__avg']:
+				employee.avg_time_in = datetime.time(int(time_avg['time_in__avg']))
+			
+			if time_avg['time_out__avg']:
+				employee.avg_time_out = datetime.time(int(time_avg['time_out__avg']))
+			
 			employee.save()
