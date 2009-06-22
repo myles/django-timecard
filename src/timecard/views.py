@@ -108,8 +108,7 @@ def weekly(request, username, year, week):
 	
 	week_total_hours = 0
 	for timecard in queryset:
-		if timecard.time_out:
-			week_total_hours = week_total_hours + timecard.hours
+		week_total_hours = week_total_hours + timecard.hours
 	
 	context = {
 		'employee': employee,
