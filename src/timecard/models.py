@@ -36,7 +36,7 @@ class Employee(models.Model):
 	
 	def today_timecard(self):
 		TODAY = datetime.date.today()
-		return Timecard.objects.filter(user=self.employee, date=TODAY)
+		return Timecard.objects.get(user=self.employee, date=TODAY)
 
 class Timecard(models.Model):
 	user = models.ForeignKey(User, related_name='timecards')
