@@ -7,7 +7,7 @@ def read(fname):
 
 setup(
 	name = 'django-timecard',
-	version = '0.1',
+	version = '0.2',
 	url = 'http://github.com/myles/django-timecard',
 	license = 'BSD License',
 	description = 'A Django timecard application.',
