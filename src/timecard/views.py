@@ -11,7 +11,7 @@ from timecard.forms import TimecardForm
 def index(request):
 	user = request.user
 	
-	if not user.has_perm('add_timecard') or not user.has_perm('edit_timecard'):
+	if not user.has_perm('timecard.add_timecard') or not user.has_perm('timecard.edit_timecard'):
 		return HttpResponseForbidden()
 	
 	try:
@@ -84,7 +84,7 @@ def weekly(request, username, year, week):
 	except Employee.DoesNotExist:
 		raise Http404
 	
-	if not user.has_perm('add_timecard') or not user.has_perm('edit_timecard'):
+	if not user.has_perm('timecard.add_timecard') or not user.has_perm('timecard.edit_timecard'):
 		return HttpResponseForbidden()
 	
 	try:
@@ -138,7 +138,7 @@ def user(request, username):
 	except Employee.DoesNotExist:
 		raise Http404
 	
-	if not user.has_perm('add_timecard') or not user.has_perm('edit_timecard'):
+	if not user.has_perm('timecard.add_timecard') or not user.has_perm('timecard.edit_timecard'):
 		return HttpResponseForbidden()
 	
 	try:
