@@ -33,6 +33,10 @@ class Employee(models.Model):
 	
 	def __unicode__(self):
 		return u"%s %s" % (self.employee.first_name, self.employee.last_name)
+	
+	def today_timecard(self):
+		TODAY = datetime.date.today()
+		return Timecard.objects.filter(user=self.employee, date=TODAY)
 
 class Timecard(models.Model):
 	user = models.ForeignKey(User, related_name='timecards')
