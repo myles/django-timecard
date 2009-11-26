@@ -28,7 +28,7 @@ class Employee(models.Model):
 	
 	@permalink
 	def get_absolute_url(self):
-		return ('timecard_employee_detail', None, {
+		return ('timecard_user', None, {
 			'username': self.employee.username,
 		})
 	

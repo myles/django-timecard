@@ -3,6 +3,7 @@ import datetime, time
 from django.http import Http404, HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.db.models import Sum
 
@@ -11,9 +12,6 @@ from timecard.forms import TimecardForm, BreakForm
 
 def index(request):
 	user = request.user
-	
-	if not user.has_perm('timecard.add_timecard') or not user.has_perm('timecard.edit_timecard'):
-		return HttpResponseForbidden()
 	
 	try:
 		employee = Employee.objects.get(employee=user)
@@ -90,23 +88,22 @@ def index(request):
 	return render_to_response('timecard/index.html', context, context_instance=RequestContext(request))
 
 def weekly(request, username, year, week):
-	user = request.user
+	try:
+		user = User.objects.get(username=username)
+	except User.DoesNotExist:
+		raise Http404
 	
 	try:
-		employee = Employee.objects.get(employee__username=username)
+		employee = Employee.objects.get(employee=user)
 	except Employee.DoesNotExist:
 		raise Http404
 	
-	if not user.has_perm('timecard.add_timecard') or not user.has_perm('timecard.edit_timecard'):
-		return HttpResponseForbidden()
-	
 	try:
-		manager = Employee.objects.get(employee=employee.employee, manager__in=[request.user,])
+		manager = Employee.objects.get(employee=user, manager__in=[request.user,])
 	except Employee.DoesNotExist:
 		manager = None
-		employee = Employee.objects.get(employee=user)
 		
-		if not user == employee.employee:
+		if not user == request.user:
 			return HttpResponseForbidden()
 	
 	try:
@@ -143,26 +140,25 @@ def weekly(request, username, year, week):
 	return render_to_response('timecard/weekly.html', context, context_instance=RequestContext(request))
 
 def user(request, username):
-	user = request.user
+	try:
+		user = User.objects.get(username=username)
+	except User.DoesNotExist:
+		raise Http404
 	
 	try:
-		employee = Employee.objects.get(employee__username=username)
+		employee = Employee.objects.get(employee=user)
 	except Employee.DoesNotExist:
 		raise Http404
 	
-	if not user.has_perm('timecard.add_timecard') or not user.has_perm('timecard.edit_timecard'):
-		return HttpResponseForbidden()
-	
 	try:
-		manager = Employee.objects.get(employee=employee.employee, manager__in=[request.user,])
+		manager = Employee.objects.get(employee=user, manager__in=[request.user,])
 	except Employee.DoesNotExist:
 		manager = None
-		employee = Employee.objects.get(employee=user)
 		
-		if not user == employee.employee:
+		if not user == request.user:
 			return HttpResponseForbidden()
 	
-	queryset = Timecard.objects.filter(user=employee.employee).order_by('-date')
+	queryset = Timecard.objects.filter(user=user).order_by('-date')
 	
 	context = {
 		'employee': employee,
