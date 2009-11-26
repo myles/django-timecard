@@ -6,6 +6,7 @@ from django.db import models
 from django.db.models import permalink
 from django.contrib.auth.models import User
 from django.contrib.comments.models import Comment
+from django.template.defaultfilters import pluralize
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.generic import GenericRelation
 
@@ -118,3 +119,42 @@ class Timecard(models.Model):
 			return u"%s" % (self.hours)
 		else:
 			return 0
+	
+	@property
+	def breaks(self):
+		return Break.objects.filter(timecard=self).aggregate(models.Sum('duration'))['duration__sum']
+	
+	@property
+	def display_breaks(self):
+		hours, minutes = divmod(int(self.breaks), 60)
+		
+		if hours and minutes == 0:
+			return u"%s %s%s" % (hours, 'hour', pluralize(hours))
+		elif minutes and hours == 0:
+			return u"%s %s%s" % (minutes, 'minute', pluralize(minutes))
+		else:
+			return u"%s %s%s %s %s%s" % (hours, 'hour', pluralize(hours), minutes, 'minute', pluralize(minutes))
+
+class Break(models.Model):
+	timecard = models.ForeignKey(Timecard, verbose_name=_('timecard'))
+	duration = models.PositiveIntegerField(_('duration'), help_text='In minutes.')
+	
+	date_added = models.DateTimeField(_('date added'), auto_now_add=True)
+	date_modified = models.DateTimeField(_('date modified'), auto_now=True)
+	
+	class Meta:
+		verbose_name = _('break')
+		verbose_name_plural = _('breaks')
+		db_table = 'timecard_breaks'
+		ordering = ('-date_added',)
+	
+	def __unicode__(self):
+		return u"%s %s" % (self.timecard, self.duration)
+	
+	@permalink
+	def get_absolute_url(self):
+		return ('timecard_weekly', None, {
+			'username': self.user.username,
+			'year': self.date.year,
+			'week': self.date.strftime("%W"),
+		})

@@ -10,17 +10,8 @@
 	<p><a href="{% url timecard_weekly employee.employee.username first_date|date:"Y" prev_week %}">{{ prev_week }}</a> - <a href="{% url timecard_weekly employee.employee.username last_date|date:"Y" next_week %}">{{ next_week }}</a></p>
 	
 	<table border="0">
-		<thead><tr><th>Day</th><th>Time in</th><th>Lunch out</th><th>Lunch in</th><th>Time out</th><th>Hours</th></tr></thead>
-		<tfoot>
-			<tr>
-				<th>Total Hours</th>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<th>{{ week_total_hours }}</th>
-			</tr>
-		</tfoot>
+		<thead><tr><th>Day</th><th>Time in</th><th>Lunch out</th><th>Lunch in</th><th>Time out</th><th>Breaks</th><th>Hours</th></tr></thead>
+		<tfoot><tr><th>Totals</th><td></td><td></td><td></td><td></td><th>{% if timecard.breaks %}{{ breaks_sum.duration__sum }} min.{% endif %}</th><th>{{ week_total_hours }}</th></tr></tfoot>
 		{% for timecard in timecards %}
 			<tr>
 				<th>{{ timecard.date|date:"l" }}</th>
@@ -28,6 +19,7 @@
 				<td>{{ timecard.lunch_out|time:"g:i a" }}</td>
 				<td>{{ timecard.lunch_in|time:"g:i a" }}</td>
 				<td>{{ timecard.time_out|time:"g:i a" }}</td>
+				<th>{% if timecard.breaks %}{{ timecard.breaks }} min.{% endif %}</th>
 				<th>{{ timecard.display_hours }}</th>
 			</tr>
 		{% endfor %}

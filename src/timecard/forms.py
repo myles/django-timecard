@@ -45,3 +45,20 @@ class TimecardForm(forms.Form):
 	lunch_out = FuzzyTimeField(label=u'Lunch out', required=False)
 	lunch_in = FuzzyTimeField(label=u'Lunch in', required=False)
 	time_out = FuzzyTimeField(label=u'Time out', required=False)
+	
+	fm_name = forms.CharField(widget=forms.HiddenInput, initial=u'TimecardForm')
+
+BREAK_DURATION_CHOICES = (
+	(5, '5 min'),
+	(10, '10 min'),
+	(15, '15 min'),
+	(20, '20 min'),
+	(30, '30 min'),
+	(40, '40 min'),
+	(50, '50 min'),
+	(60, '1 hour'),
+)
+
+class BreakForm(forms.Form):
+	duration = forms.ChoiceField(label=u'Duration', choices=BREAK_DURATION_CHOICES)
+	fm_name = forms.CharField(widget=forms.HiddenInput, initial=u'BreakForm')

@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.contenttypes import generic
 from django.contrib.comments.models import Comment
 
-from timecard.models import Employee, Timecard
+from timecard.models import Employee, Timecard, Break
 
 class EmployeeAdmin(admin.ModelAdmin):
 	list_display = ('__unicode__',)
@@ -25,5 +25,9 @@ class TimecardAdmin(admin.ModelAdmin):
 		CommentInline,
 	]
 
+class BreakAdmin(admin.ModelAdmin):
+	list_display = ('timecard', 'duration')
+
 admin.site.register(Employee, EmployeeAdmin)
 admin.site.register(Timecard, TimecardAdmin)
+admin.site.register(Break, BreakAdmin)
