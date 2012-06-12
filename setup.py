@@ -22,7 +22,8 @@ setup(
 	install_requires = [
 		'setuptools',
 		'python-dateutil',
-	],
+    'isoweek',
+  ],
 	
 	classifiers = [
 		'Development Status :: 4 - Beta',

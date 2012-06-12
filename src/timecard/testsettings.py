@@ -13,10 +13,10 @@ INSTALLED_APPS = [
 	'django.contrib.sites',
 	'django.contrib.admin',
 	'django.contrib.admindocs',
-	'django.contrib.comments',
 	'django.contrib.contenttypes',
 	
 	'timecard',
 ]
 ROOT_URLCONF = 'timecard.testurls'
 TIME_ZONE = 'Canada/Eastern'
+STATIC_URL = '/static/'
